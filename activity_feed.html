@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Activity Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* STRICT BOX-SIZING RESET — kills padding/border overflow bugs */
+  *, *::before, *::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ -webkit-text-size-adjust:100%; }
+  img, svg{ display:block; max-width:100%; }
+
+  :root{
+    --bg:#0f1115; --panel:#191c22; --panel-hi:#20242c; --line:#2a2e37;
+    --text:#eef0f4; --muted:#9297a3; --blue:#5b8def; --pink:#ff4d6a;
+  }
+
+  body{ background:var(--bg); color:var(--text); font-family:'Inter', sans-serif; min-height:100vh; }
+
+  /* STICKY NAVIGATION HEADER */
+  header{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    background:rgba(15,17,21,0.75);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Sora', sans-serif; font-weight:700; font-size:16px; letter-spacing:-0.01em;
+  }
+  .brand__mark{ width:26px; height:26px; border-radius:8px; background:linear-gradient(135deg, var(--blue), #8f6bf0); }
+
+  nav{ display:flex; gap:22px; }
+  nav a{ color:var(--muted); text-decoration:none; font-size:13.5px; font-weight:500; }
+  nav a.active{ color:var(--text); }
+
+  .header__right{ display:flex; align-items:center; gap:14px; }
+
+  .icon-btn{
+    position:relative; width:36px; height:36px; border-radius:10px;
+    background:var(--panel); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:15px;
+  }
+
+  /* ABSOLUTE OVERLAY NOTIFICATION BADGE */
+  .badge{
+    position:absolute; top:-5px; right:-5px; min-width:16px; height:16px; padding:0 3px;
+    border-radius:999px; background:var(--pink); color:#fff; font-size:10px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; border:2px solid var(--bg);
+  }
+  .badge--dot{ width:10px; height:10px; min-width:0; padding:0; top:-1px; right:-1px; }
+  .badge--pulse::after{
+    content:""; position:absolute; inset:-4px; border-radius:50%;
+    border:2px solid var(--pink); animation:pulse 1.8s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%{ transform:scale(0.7); opacity:0.9; }
+    100%{ transform:scale(1.6); opacity:0; }
+  }
+
+  main{
+    max-width:640px; margin:0 auto; padding:28px 20px 60px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+
+  h1.page-title{ font-family:'Sora', sans-serif; font-size:20px; margin-bottom:6px; }
+  .page-sub{ color:var(--muted); font-size:13px; margin-bottom:18px; }
+
+  /* PROFILE CARD */
+  .feed-card{
+    position:relative; display:flex; gap:14px; padding:16px;
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  }
+
+  .avatar-wrap{ position:relative; flex-shrink:0; }
+  .avatar{
+    width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(135deg, var(--blue), #8f6bf0);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Sora', sans-serif; font-weight:700; font-size:16px;
+  }
+  .status-dot{
+    position:absolute; bottom:-1px; right:-1px; width:12px; height:12px;
+    border-radius:50%; background:#3ddc84; border:2px solid var(--panel);
+  }
+
+  .feed-card__content{ flex:1; min-width:0; }
+  .feed-card__top{ display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+  .feed-card__name{ font-weight:600; font-size:14px; }
+  .feed-card__time{ color:var(--muted); font-size:12px; flex-shrink:0; }
+  .feed-card__text{ color:#c7cad2; font-size:13.5px; line-height:1.55; margin-top:4px; }
+
+  .feed-card__meta{ display:flex; gap:16px; margin-top:10px; font-size:12px; color:var(--muted); }
+  .feed-card__meta span{ display:flex; align-items:center; gap:5px; }
+
+  .feed-card--highlight{ background:var(--panel-hi); border-color:#343a46; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="brand__mark"></span>
+    Pulse
+  </div>
+  <nav>
+    <a href="#" class="active">Feed</a>
+    <a href="#">Teams</a>
+    <a href="#">Projects</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="header__right">
+    <div class="icon-btn">🔍</div>
+    <div class="icon-btn">
+      🔔
+      <span class="badge">5</span>
+    </div>
+    <div class="avatar" style="width:34px;height:34px;font-size:13px;position:relative;">
+      RK
+      <span class="badge badge--dot"></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1 class="page-title">Today</h1>
+  <p class="page-sub">Updates from the people and projects you follow</p>
+
+  <div class="feed-card feed-card--highlight">
+    <div class="avatar-wrap">
+      <div class="avatar">AN</div>
+      <span class="status-dot"></span>
+      <span class="badge badge--pulse" style="top:-4px;right:-4px;"></span>
+    </div>
+    <div class="feed-card__content">
+      <div class="feed-card__top">
+        <span class="feed-card__name">Anita Nair</span>
+        <span class="feed-card__time">2m ago</span>
+      </div>
+      <p class="feed-card__text">Pushed the new onboarding flow to staging — ready for review before standup.</p>
+      <div class="feed-card__meta">
+        <span>💬 3 comments</span>
+        <span>👍 12</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="feed-card">
+    <div class="avatar-wrap">
+      <div class="avatar" style="background:linear-gradient(135deg,#ff8a5b,#ff4d6a);">DS</div>
+      <span class="status-dot" style="background:#9297a3;"></span>
+    </div>
+    <div class="feed-card__content">
+      <div class="feed-card__top">
+        <span class="feed-card__name">Dev Shetty</span>
+        <span class="feed-card__time">18m ago</span>
+      </div>
+      <p class="feed-card__text">Closed 4 tickets in the sprint board. Backend latency is down 22% after the cache fix.</p>
+      <div class="feed-card__meta">
+        <span>💬 1 comment</span>
+        <span>👍 8</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="feed-card">
+    <div class="avatar-wrap">
+      <div class="avatar" style="background:linear-gradient(135deg,#3ddc84,#17b890);">MK</div>
+      <span class="status-dot"></span>
+    </div>
+    <div class="feed-card__content">
+      <div class="feed-card__top">
+        <span class="feed-card__name">Meera Krishnan</span>
+        <span class="feed-card__time">1h ago</span>
+      </div>
+      <p class="feed-card__text">Scheduled the design review for Thursday, 4 PM. Figma link is in the #design channel.</p>
+      <div class="feed-card__meta">
+        <span>💬 6 comments</span>
+        <span>👍 4</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
